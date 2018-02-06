@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<!-- Bootstrap CDN -->
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+	 crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="assets/css/reset.css">
+	<link rel="stylesheet" type="text/css" href="assets/css/style.css">
+	<script src="https://code.jquery.com/jquery.js"></script>
+	<title>HANGMAN</title>
+</head>
+
+<body>
+	<div class="container">
+		<div class="jumbotron">
+			<h1>Hangman</h1>
+			<p>Can You Guess The Color?</p>
+		</div>
+
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">Word to Guess</h3>
+			</div>
+			<div class="panel-body">
+				<h2 id="wordToGuess">_ _ _ _ _ _ _</h2>
+			</div>
+		</div>
+
+		<div class="panel panel-default">
+			<div class="panel-body">
+				Wrong Guesses:
+				<span id="wrongGuesses"></span>
+			</div>
+		</div>
+
+		<div class="panel panel-default">
+			<div class="panel-body">
+				Guesses Left:
+				<span id="numGuesses"></span>
+			</div>
+		</div>
+
+		<div class="panel panel-default">
+			<div class="panel-body">
+				Win Counter:
+				<span id="winCounter">0</span>
+			</div>
+		</div>
+
+		<div class="panel panel-default">
+			<div class="panel-body">
+				Loss Counter:
+				<span id="lossCounter">0</span>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		$(document).ready(function () {
+			var doubleWord = ['a', 'b', 'c',
+				'd', 'e', 'f',
+				'g', 'h', 'i',
+				'j', 'k', 'l',
+				'm', 'n', 'o',
+				'p', 'q', 'r',
+				's', 't', 'u',
+				'v', 'w', 'x',
+				'y', 'z'];
+			var wordBank = ['orange', 'blue', 'green', 'yellow', 'violet', 'red', 'purple'];
+			var choosenWord = "";
+			var lettersInWord = [];
+			var numBlanks = 0;
+			var blanksAndSuccesses = [];
+			var wrongLetters = [];
+			var winCount = 0;
+			var loseCount = 0;
+			var guessesLeft = 9;
+			var rightGuessCounter = 0;
+			function reset() {
+				choosenWord = wordBank[Math.floor(Math.random() * wordBank.length)];
+				lettersInWord = choosenWord.split('');
+				numBlanks = lettersInWord.length;
+
+				letterGuessed = 0;
+				rightGuessCounter = 0;
+				guessesLeft = 9;
+				wrongLetters = [];
+				blanksAndSuccesses = [];
+				doubleWord = ['a', 'b', 'c',
+					'd', 'e', 'f',
+					'g', 'h', 'i',
+					'j', 'k', 'l',
+					'm', 'n', 'o',
+					'p', 'q', 'r',
+					's', 't', 'u',
+					'v', 'w', 'x',
+					'y', 'z'];
+				test = false;
+				startGame();
+			}
+			function startGame() {
+				choosenWord = wordBank[Math.floor(Math.random() * wordBank.length)];
+				lettersInWord = choosenWord.split('');
+				numBlanks = lettersInWord.length;
+
+				rightGuessCounter = 0;
+				guessesLeft = 9;
+				wrongLetters = [];
+				blanksAndSuccesses = [];
+				doubleWord = ['a', 'b', 'c',
+					'd', 'e', 'f',
+					'g', 'h', 'i',
+					'j', 'k', 'l',
+					'm', 'n', 'o',
+					'p', 'q', 'r',
+					's', 't', 'u',
+					'v', 'w', 'x',
+					'y', 'z'];
+
+				for (var i = 0; i < numBlanks; i++) {
+					blanksAndSuccesses.push('_');
+					document.getElementById('wordToGuess').innerHTML = blanksAndSuccesses;
+				}
+
+				document.getElementById('wordToGuess').innerHTML = blanksAndSuccesses.join(' ');
+				document.getElementById('numGuesses').innerHTML = guessesLeft;
+				document.getElementById('winCounter').innerHTML = winCount;
+				document.getElementById('lossCounter').innerHTML = loseCount;
+				document.getElementById('wrongGuesses').innerHTML = wrongLetters;
+				console.log(choosenWord);
+				console.log(lettersInWord);
+				console.log(numBlanks);
+				console.log(blanksAndSuccesses);
+			}
+
+			function compareLetters(userKey) {
+				console.log('WORKING!');
+				if (choosenWord.indexOf(userKey) > -1) {
+					for (var i = 0; i < numBlanks; i++) {
+						if (lettersInWord[i] === userKey) {
+							rightGuessCounter++;
+							blanksAndSuccesses[i] = userKey;
+							document.getElementById('wordToGuess').innerHTML = blanksAndSuccesses.join(' ');
+						}
+					}
+					console.log(blanksAndSuccesses);
+				}
+				else {
+					wrongLetters.push(userKey);
+					guessesLeft--;
+					document.getElementById('numGuesses').innerHTML = guessesLeft;
+					document.getElementById('wrongGuesses').innerHTML = wrongLetters;
+					console.log('Wrong Letters = ' + wrongLetters);
+					console.log('Guesses left are ' + guessesLeft);
+				}
+
+
+
+			}
+			function winLose() {
+				if (rightGuessCounter === numBlanks) {
+					winCount++;
+					document.getElementById('winCounter').innerHTML = winCount;
+					alert('You Win');
+					reset();
+				}
+				else if (guessesLeft === 0) {
+					loseCount++;
+					document.getElementById('lossCounter').innerHTML = loseCount;
+					alert('You Lose');
+					reset();
+				}
+			}
+
+			startGame();
+
+			document.onkeyup = function (event) {
+				test = true;
+				var letterGuessed = event.key;
+				for (var i = 0; i < doubleWord.length; i++) {
+					if (letterGuessed === doubleWord[i] && test === true) {
+						var spliceDword = doubleWord.splice(i, 1);
+						console.log('Double word is = ' + doubleWord[i])
+						console.log('Spliced Word is = ' + spliceDword);
+
+						compareLetters(letterGuessed);
+						winLose();
+					}
+				}
+
+			}
+		});
+	</script>
+</body>
+
+</html>
