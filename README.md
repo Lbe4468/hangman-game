@@ -1,5 +1,4 @@
 # hangman-game
-<hr>
 
 Simple game where the player types a letter to guess which color is being displayed. The player has nine incorrect guesses before the game ends and the player loses. 
 
